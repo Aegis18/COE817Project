@@ -2,7 +2,6 @@ import javax.crypto.*;
 import java.io.*;
 import java.net.Socket;
 import java.security.*;
-import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -148,7 +147,7 @@ public class ClientSocketInterface implements Runnable {
 
             }
         }catch(IOException e){
-            PokerHouse.getInstance().removePlayer(socket);
+//            PokerHouse.getInstance().removePlayer(socket);
         }
     }
 }

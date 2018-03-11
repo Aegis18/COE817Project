@@ -4,6 +4,7 @@ public class Card {
 
     private String suit;
     private int value;
+    private static int card = 0;
 
     public Card(int cardValue) throws NoCardException {
         final int suitNum = (int)cardValue/13;
@@ -37,10 +38,9 @@ public class Card {
     }
 
     public static int generateCard(){
-        Random random = new Random(123456789);
-        int card =0;
-        card = random.nextInt(51) + 1;
-        return card;
+       Random random = new Random(123456789);
+       card = random.nextInt(51) + 1;
+       return card;
     }
 
     public String getSuit() {
@@ -58,4 +58,9 @@ public class Card {
     public void setValue(int value) {
         this.value = value;
     }
+
+    public int getCard(){
+        return card;
+    }
+
 }
