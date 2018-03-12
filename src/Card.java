@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Card {
+public final class Card {
 
     private String suit;
     private int value;
@@ -17,18 +17,21 @@ public class Card {
             case 1:
                 suit = "Diamonds";
                 break;
-            case 3:
+            case 2:
                 suit = "Spades";
                 break;
-            case 4:
+            case 3:
                 suit = "Clubs";
                 break;
             default:
-                throw new NoCardException();
+                throw new NoCardException(suitNum);
         }
     }
 
     public class NoCardException extends Exception{
+        public NoCardException (int suitNum){
+            System.out.println("suitNum: " + suitNum);
+        }
 
     }
 

@@ -2,43 +2,57 @@ import java.util.*;
 
 public class HandCalculator {
 
-    private ArrayList<Card> fullHand = new ArrayList<>();
-    private ArrayList<Card> straightFlushTest = new ArrayList<>();
+    private ArrayList<Card> fullHand;
+    private ArrayList<Card> straightFlushTest;
+    private ArrayList<Card> twoPairtest;
     private int highCard = 0;
-    private int baseHandScore = 0;
     private int score = 0;
 
-    private HandCalculator(ArrayList<Card> table, Player player){
+     public HandCalculator(ArrayList<Card> table, Player player){
+         fullHand = new ArrayList<>();
+         straightFlushTest = new ArrayList<>();
+         twoPairtest = new ArrayList<>();
         fullHand.addAll(table);
         ArrayList<Card> playerCards = new ArrayList<Card>(Arrays.asList(player.getCards()));
         fullHand.addAll(playerCards);
         fullHand.sort(Comparator.comparingInt(Card::getValue));
         Collections.reverse(fullHand);
-        }
+    }
 
-    public HandCalculator(ArrayList<Card> fullHand){
-        this.fullHand = fullHand;
+    public HandCalculator(ArrayList<Card> table){
+        fullHand = new ArrayList<>();
+        straightFlushTest = new ArrayList<>();
+        twoPairtest = new ArrayList<>();
+        fullHand.addAll(table);
+        fullHand.sort(Comparator.comparingInt(Card::getValue));
+        Collections.reverse(fullHand);
     }
 
     private boolean isStraightFlush(){
-        Boolean flushTest = this.isFlush();
-        Boolean straightTest = false;
-        if(flushTest == true)
-            straightTest = this.isStraight(straightFlushTest);
-
-        if(straightTest == true)
-            return true;
-        else
-            return false;
-
+         return isFlush() && isStraight(straightFlushTest);
     }
+
     private boolean isFourOfAKind(){
-
+        ArrayList<Card> testFourOfAKind = fullHand;
+        int handSize = testFourOfAKind.size();
+        int fourCounter = 0;
+        for(int i = 0; i<handSize;i++){
+            for(int j = 0; j<handSize; j++){
+                if(testFourOfAKind.get(i).getValue() == testFourOfAKind.get(j).getValue()){
+                    fourCounter++;
+                }
+            }
+            if(fourCounter == 4){
+                highCard = testFourOfAKind.get(i).getValue();
+                return true;
+            }
+            else
+                fourCounter = 0;
+        }
         return false;
     }
-    private boolean isFullHouse(){
-
-        return false;
+    public boolean isFullHouse(){
+        return(isThreeOfAKind() && isPair(twoPairtest));
     }
     private boolean isFlush(){
         Iterator<Card> hand = fullHand.iterator();
@@ -54,25 +68,27 @@ public class HandCalculator {
                 spades.add(card);
             else if(card.getSuit().equals("Clubs"))
                 clubs.add(card);
-            else
+            else if(card.getSuit().equals("Diamonds"))
                 diamonds.add(card);
         }
-        if(hearts.size()==5) {
+
+        System.out.println(hearts.size());
+        if(hearts.size()>=5) {
             hearts.sort(Comparator.comparingInt(Card::getValue));
             highCard = hearts.get(0).getValue();
             straightFlushTest = hearts;
             return true;
-        }else if(diamonds.size()==5){
+        }else if(diamonds.size()>=5){
             diamonds.sort(Comparator.comparingInt(Card::getValue));
             highCard = diamonds.get(0).getValue();
             straightFlushTest = diamonds;
             return true;
-        }else if(spades.size()==5){
+        }else if(spades.size()>=5){
             spades.sort(Comparator.comparingInt(Card::getValue));
             highCard = spades.get(0).getValue();
             straightFlushTest = spades;
             return true;
-        }else if(clubs.size()==5){
+        }else if(clubs.size()>=5){
             clubs.sort(Comparator.comparingInt(Card::getValue));
             highCard = clubs.get(0).getValue();
             straightFlushTest = clubs;
@@ -80,70 +96,128 @@ public class HandCalculator {
         } else
             return false;
     }
+
     private boolean isStraight(){
-        ArrayList<Card> testHand = fullHand;
+        ArrayList<Card> testHand = new ArrayList<>(fullHand);
         ArrayList<Card> straight = new ArrayList<Card>();
         Boolean trueStraight = false; //if this is ever set to true the method knows that there is a true straight
-        int x = 0;      //counter to make sure straight ArrayList is no more than 5 (0,1,2,3,4) elements but is used for checking if a straight has been found.
+         //counter to make sure straight ArrayList is no more than 5 (0,1,2,3,4) elements but is used for checking if a straight has been found.
 
-        for(int i = 0; i<=testHand.size(); i++){
-            if((testHand.get(i).getValue() == (testHand.get(i+1).getValue()+1)) && x!=4){
-                straight.add(x, testHand.get(i));
-                x++;
-            }else if(x==4)
+        for(int i = 0; i<testHand.size(); i++){
+            if((i+5) <= 7){
+                if((testHand.get(i).getValue()==(testHand.get(i+1).getValue()+1)) && (testHand.get(i).getValue()==(testHand.get(i+2).getValue()+2)) && (testHand.get(i).getValue()==(testHand.get(i+3).getValue()+3)) && (testHand.get(i).getValue()==(testHand.get(i+4).getValue()+4))){
+                    highCard = testHand.get(i).getValue();
+                    System.out.println("highcard = " +highCard);
+                    return true;
+                }
+            }else{
                 break;
+            }
         }
-        //now we need to check if the straight is truly a sequence of value and something like (12,11,10,9,6,5,4) does not flag true as a straight
-        if((straight.get(0).getValue()==(straight.get(1).getValue()+1)) && (straight.get(0).getValue()==(straight.get(2).getValue()+2)) && (straight.get(0).getValue()==(straight.get(3).getValue()+3)) && (straight.get(0).getValue()==(straight.get(4).getValue()+4))){
-            trueStraight = true;
-        }
-
-        if(x==4 && trueStraight == true){
-            highCard = straight.get(0).getValue();//this is used to calculate the score in the getScore method
-            return true;
-        }else
-            return false;
-
+        return false;
     }
+
     private boolean isStraight(ArrayList straightFlushTest){//this mmethod is only used by the isStraightFlush method to check whether a given flush is also a straight.
-        ArrayList<Card> testHand = straightFlushTest;
-        ArrayList<Card> straight = new ArrayList<Card>();
-        Boolean trueStraight = false; //if this is ever set to true the method knows that there is a true straight
-        int x = 0;      //counter to make sure straight ArrayList is no more than 5 (0,1,2,3,4) elements but is used for checking if a straight has been found.
-
-        for(int i = 0; i<=testHand.size(); i++){
-            if((testHand.get(i).getValue() == (testHand.get(i+1).getValue()+1)) && x!=4){
-                straight.add(x, testHand.get(i));
-                x++;
-            }else if(x==4)
+        ArrayList<Card> testHand = new ArrayList<>(straightFlushTest);
+        Collections.reverse(testHand);
+        for(int i = 0; i<testHand.size(); i++){
+            if((i+5) <= 7){
+                if((testHand.get(i).getValue()==(testHand.get(i+1).getValue()+1)) && (testHand.get(i).getValue()==(testHand.get(i+2).getValue()+2)) && (testHand.get(i).getValue()==(testHand.get(i+3).getValue()+3)) && (testHand.get(i).getValue()==(testHand.get(i+4).getValue()+4))){
+                    highCard = testHand.get(i).getValue();
+                    System.out.println("highcard = " +highCard);
+                    return true;
+                }
+            }else{
                 break;
+            }
         }
-        //now we need to check if the straight is truly a sequence of value and something like (12,11,10,9,6,5,4) does not flag true as a straight
-        if((straight.get(0).getValue()==(straight.get(1).getValue()+1)) && (straight.get(0).getValue()==(straight.get(2).getValue()+2)) && (straight.get(0).getValue()==(straight.get(3).getValue()+3)) && (straight.get(0).getValue()==(straight.get(4).getValue()+4))){
-            trueStraight = true;
-        }
-
-        if(x==4 && trueStraight == true){
-            highCard = straight.get(0).getValue();//this is used to calculate the score in the getScore method
-            return true;
-        }else
-            return false;
-
+        return false;
     }
     private boolean isThreeOfAKind(){
-
+        ArrayList<Card> testThree = new ArrayList<>(fullHand);
+        int handSize = testThree.size();
+        int threeCounter = 0;
+        for(int i = 0; i<handSize;i++){
+            for(int j = 0; j<handSize; j++){
+                if(testThree.get(i).getValue() == testThree.get(j).getValue()){
+                    threeCounter++;
+                }
+            }
+            if(threeCounter == 3){
+                highCard = testThree.get(i).getValue();
+                Iterator<Card> hand = testThree.iterator();
+                while(hand.hasNext()){
+                    Card card = hand.next();
+                    if(card.getValue() == highCard)
+                        hand.remove();
+                }
+                twoPairtest = testThree;
+                return true;
+            }
+            else
+                threeCounter = 0;
+        }
         return false;
     }
-    private boolean isDoublePairs(){
-
-        return false;
+    private boolean isDoublePair(){
+        return isPair() && isPair(twoPairtest);
+//        if(isPair()){
+//           if(isPair(twoPairtest))
+//               return true;
+//           else
+//               return false;
+//        }else
+//        return false;
     }
     private boolean isPair(){
+        ArrayList<Card> testPair = new ArrayList<Card>(fullHand);
+        int handSize = testPair.size();
+        int pairCounter = 0;
+        for(int i = 0; i<handSize;i++){
+            for(int j = 0; j<handSize; j++){
+                if(testPair.get(i).getValue() == testPair.get(j).getValue()){
+                    pairCounter++;
+                }
+            }
+            if(pairCounter == 2){
+                highCard = testPair.get(i).getValue();
+                Iterator<Card> hand = testPair.iterator();
+                while(hand.hasNext()){
+                    Card card = hand.next();
+                    if(card.getValue() == highCard)
+                        hand.remove();
+                }
+                twoPairtest = testPair;
+                return true;
+            }
+            else
+                pairCounter = 0;
+        }
+        return false;
+    }
+
+    private boolean isPair(ArrayList doubleTestPair){
+        ArrayList<Card> testPair = new ArrayList<Card>(doubleTestPair);
+        int handSize = testPair.size();
+        int pairCounter = 0;
+        for(int i = 0; i<handSize;i++){
+            for(int j = 0; j<handSize; j++){
+                if(testPair.get(i).getValue() == testPair.get(j).getValue()){
+                    pairCounter++;
+                }
+            }
+            if(pairCounter == 2){
+               if(testPair.get(i).getValue() > highCard)
+                    highCard = testPair.get(i).getValue();
+               return true;
+            }
+            else
+                pairCounter = 0;
+        }
         return false;
     }
     private int HighCard(){
-        highCard = fullHand.get(0).getValue();
-        return highCard;
+        return fullHand.get(0).getValue();
     }
 
 
@@ -160,10 +234,10 @@ public class HandCalculator {
             score = 400 + highCard;
         else if(this.isThreeOfAKind() == true)
             score = 300 + highCard;
-        else if(this.isDoublePairs() == true)
+        else if(this.isDoublePair() == true)
             score = 200 + highCard;
         else if(this.isPair() == true)
-            score = 100 +highCard;
+            score = 100 + highCard;
         else
             score = this.HighCard();
 
