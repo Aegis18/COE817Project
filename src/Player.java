@@ -45,6 +45,19 @@ public class Player {
         this.ID = ID;
         this.cards = new Card[2];
         pokerHouse = PokerHouse.getInstance();
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            printWriter = new PrintWriter(socket.getOutputStream(), true);
+            encryptCipher = Cipher.getInstance(RSA);
+            decryptCipher = Cipher.getInstance(RSA);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        init();
     }
 
     private void init() {
@@ -116,6 +129,9 @@ public class Player {
             //SET UP DES CIPHER
             //************************************************
 
+            encryptCipher = Cipher.getInstance(DES);
+            decryptCipher = Cipher.getInstance(DES);
+
             encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey);
             decryptCipher.init(Cipher.DECRYPT_MODE, secretKey);
         } catch (NoSuchAlgorithmException e) {
@@ -129,6 +145,8 @@ public class Player {
         } catch (BadPaddingException e) {
             e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         }
     }

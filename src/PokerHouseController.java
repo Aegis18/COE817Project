@@ -1,7 +1,5 @@
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PokerHouseController {
@@ -12,6 +10,7 @@ public class PokerHouseController {
         public static void main(String[] args){
             ServerSocket serverSocket;
             PokerHouse pokerHouse = PokerHouse.getInstance();
+            new Thread(pokerHouse).start();
             int counter = 0;
             int numOfPlayers;
             List<Player> players;

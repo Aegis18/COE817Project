@@ -19,7 +19,9 @@ public class PokerHouse implements Runnable{
     @Override
     public void run() {
         //wait until there are min of 2 players.
-        while(players.size() < 2){}
+        while(players.size() < 2){
+           System.out.println("player size =" + players.size());
+        }
         //Timer section
 
         //Game start:
@@ -91,6 +93,19 @@ public class PokerHouse implements Runnable{
         }
         winner.writeToClient("You are the winner, congratulations!!");
         this.informAllPlayersOfAnEvent("The winner of the game was player "+winner.getID());
+        this.informAllPlayersOfAnEvent("Game is over. You will now be disconnected.");
+        playerIterator = players.iterator();
+        while(playerIterator.hasNext()) {
+            Player player = playerIterator.next();
+
+            try {
+                player.getSocket().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            playerIterator.remove();
+        }
+
     }
 
 
@@ -109,12 +124,12 @@ public class PokerHouse implements Runnable{
             Iterator<Card> playerCardIterator = cards.iterator();
             player.writeToClient("There are "+players.size()+" in the game.");
             player.writeToClient("You are player: "+player.getID());
+            player.writeToClient("You have in your bank: $"+player.getBank());
             player.writeToClient("Your cards are as follows:");
             int cardNumber = 1;
             while(playerCardIterator.hasNext()){
                 Card card = playerCardIterator.next();
                 player.writeToClient("Card #"+cardNumber+":"+card.getValueString()+" of "+card.getSuit());
-                player.writeToClient("You have in your bank: $"+player.getBank());
                 cardNumber++;
             }
         }
@@ -314,6 +329,7 @@ public class PokerHouse implements Runnable{
     public void addPlayer(Socket socket){
         if(socket != null){
             players.add(new Player(socket, playerID++));
+            System.out.println("A new Player has connected");
         }
     }
 
