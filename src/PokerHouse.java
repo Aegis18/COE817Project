@@ -139,7 +139,7 @@ public class PokerHouse implements Runnable{
             player.writeToClient("Before making your choice note that the amount you need to put in to stay in the game is $"+amountThatPlayersNeedToPutIn+", and the amount that you have put in is $"+player.getAmountPutIn()+".");
             player.writeToClient("(NOTE** if you type in an invalid response/inappropriate (i.e. typing cheque if you need to raise) then you will be kicked from the game!)");
             String choice = player.readFromClient();
-            if(choice == "fold"){
+            if(choice.equals("fold")){
                 this.informAllPlayersOfAnEvent("Player: "+player.getID()+" has folded.");
                 player.writeToClient("You have been disconnected.");
                 try {
@@ -148,8 +148,7 @@ public class PokerHouse implements Runnable{
                     e.printStackTrace();
                 }
                 playerIterator.remove();
-            }
-            else if(choice == "raise"){
+            }else if(choice.equals("raise")){
                 player.writeToClient("You have $"+player.getBank()+" in your bank.");
                 player.writeToClient("Please type out the amount that you would like to bet: (NOTE** if you type in an invalid amount then you will be kicked from the game!)");
                 raise = Integer.valueOf(player.readFromClient());
@@ -173,7 +172,7 @@ public class PokerHouse implements Runnable{
 
                 }
             }
-            else if(choice == "call"){
+            else if(choice.equals("call")){
                 if((amountThatPlayersNeedToPutIn - player.getAmountPutIn()) <=player.getBank()){
                     player.setAmountPutIn(amountThatPlayersNeedToPutIn - player.getAmountPutIn());
                     this.setNewPool((amountThatPlayersNeedToPutIn - player.getAmountPutIn()));
@@ -192,7 +191,7 @@ public class PokerHouse implements Runnable{
                     playerIterator.remove();
                 }
             }
-            else if(choice == "cheque" && (amountThatPlayersNeedToPutIn == player.getAmountPutIn())){
+            else if(choice.equals("check") && (amountThatPlayersNeedToPutIn == player.getAmountPutIn())){
                 this.informAllPlayersOfAnEvent("Player: "+player.getID()+" has checked.");
             }
             else{
