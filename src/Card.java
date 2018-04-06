@@ -57,6 +57,37 @@ public final class Card {
     public int getValue() {
         return value;
     }
+    public String getValueString(){
+        String stringValue = "";
+        if(value == 0)
+            stringValue = "2";
+        else if(value == 1)
+            stringValue = "3";
+        else if(value == 2)
+            stringValue = "4";
+        else if(value == 3)
+            stringValue = "5";
+        else if(value == 4)
+            stringValue = "6";
+        else if(value == 5)
+            stringValue = "7";
+        else if(value == 6)
+            stringValue = "8";
+        else if(value == 7)
+            stringValue = "9";
+        else if(value == 8)
+            stringValue = "10";
+        else if(value == 9)
+            stringValue = "jack";
+        else if(value == 10)
+            stringValue = "queen";
+        else if(value == 11)
+            stringValue = "king";
+        else
+            stringValue = "ace";
+
+        return stringValue;
+    }
 
     public void setValue(int value) {
         this.value = value;

@@ -34,6 +34,12 @@ public class Player {
     private Card[] cards;
     private PokerHouse pokerHouse;
 
+    private int bank = 100000;
+    private int amountPutIn = 0;
+    private int handScore = 0;
+
+    private String message;
+
     public Player(Socket socket, int ID){
         this.socket = socket;
         this.ID = ID;
@@ -132,25 +138,41 @@ public class Player {
         //************************************************
         //READ CLIENTS INPUT IF EMPTY THROW ILLEGAL ARGUMENT EXCEPTION
         //************************************************
-
-        String input = "";
         try {
-            input = bufferedReader.readLine();
-        } catch (IOException e) {
-            pokerHouse.removePlayer(ID);
+            String encryptedMessage;
+            while((encryptedMessage = bufferedReader.readLine())!=null) {
+                byte[] encryptedBytes = Base64.getDecoder().decode(encryptedMessage.getBytes());
+                byte[] messageBytes = decryptCipher.doFinal(encryptedBytes);
+                String message = new String(messageBytes);
+                this.message = message;
+            }
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
         }
-
-        if(input.equals(""))
-            throw new IllegalArgumentException();
-
-        return input;
+        return message;
     }
 
     public void writeToClient(String message){
         //************************************************
         //SEND MESSAGE TO CLIENT
         //************************************************
-        printWriter.println(message);
+        byte[] messageBytes = message.getBytes();
+        try{
+            byte[] encryptedMessage = encryptCipher.doFinal(messageBytes);
+            encryptedMessage = Base64.getEncoder().encode(encryptedMessage);
+            String encryptedString = new String(encryptedMessage);
+            printWriter.println(encryptedString);
+        }catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public int getID() {
@@ -170,5 +192,35 @@ public class Player {
             throw new IllegalArgumentException();
         else
             this.cards = cards;
+    }
+
+    public int getBank(){
+        return bank;
+    }
+
+    public void setBank(int type , int amount){
+
+        if(type == 0) //if the player has bet
+            bank = bank - amount;
+        else          //if the player wins the pot
+            bank = bank + amount;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public int getAmountPutIn() {
+        return amountPutIn;
+    }
+    public void setAmountPutIn(int amount){
+        amountPutIn = amountPutIn + amount;
+    }
+
+    public int getHandScore(){
+        return handScore;
+    }
+    public void setHandScore(int score){
+        handScore = score;
     }
 }

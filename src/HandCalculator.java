@@ -9,9 +9,9 @@ public class HandCalculator {
     private int score = 0;
 
      public HandCalculator(ArrayList<Card> table, Player player){
-         fullHand = new ArrayList<>();
-         straightFlushTest = new ArrayList<>();
-         twoPairtest = new ArrayList<>();
+        fullHand = new ArrayList<>();
+        straightFlushTest = new ArrayList<>();
+        twoPairtest = new ArrayList<>();
         fullHand.addAll(table);
         ArrayList<Card> playerCards = new ArrayList<Card>(Arrays.asList(player.getCards()));
         fullHand.addAll(playerCards);
