@@ -158,12 +158,12 @@ public class Player {
         //************************************************
         try {
             String encryptedMessage;
-            while((encryptedMessage = bufferedReader.readLine())!=null) {
+                encryptedMessage = bufferedReader.readLine();
                 byte[] encryptedBytes = Base64.getDecoder().decode(encryptedMessage.getBytes());
                 byte[] messageBytes = decryptCipher.doFinal(encryptedBytes);
                 String message = new String(messageBytes);
                 this.message = message;
-            }
+
 
         }catch (IOException e) {
             e.printStackTrace();

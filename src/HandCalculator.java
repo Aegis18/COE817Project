@@ -19,11 +19,11 @@ public class HandCalculator {
         Collections.reverse(fullHand);
     }
 
-    public HandCalculator(ArrayList<Card> table){
+    public HandCalculator(List<Card> allCards){
         fullHand = new ArrayList<>();
         straightFlushTest = new ArrayList<>();
         twoPairtest = new ArrayList<>();
-        fullHand.addAll(table);
+        fullHand.addAll(allCards);
         fullHand.sort(Comparator.comparingInt(Card::getValue));
         Collections.reverse(fullHand);
     }

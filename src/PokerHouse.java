@@ -14,7 +14,6 @@ public class PokerHouse implements Runnable{
     private int playerID;
     private int amountThatPlayersNeedToPutIn = 0;
     private int raise = 0;
-    private Card[] TableCards;
     private Player winner;
     @Override
     public void run() {
@@ -30,40 +29,52 @@ public class PokerHouse implements Runnable{
         //Generate cards for all players
         this.generateCardsForAllPlayers();
         //To inform players of their cards
+        System.out.println("Cards used by players are as follows:");
+        Iterator<Card> cardInterator = usedCards.iterator();
+        while(cardInterator.hasNext()){
+            Card card = cardInterator.next();
+            System.out.println(card.getValueString()+" of "+card.getSuit());
+        }
         this.initializePlayersWithGameInfo();
         //Round #1
         this.informAllPlayersOfAnEvent("Round #1 has started.......");
         this.Round();
         //generate the table cards
         this.informAllPlayersOfAnEvent("Round #1 is over.");
-        this.generateTableCardsCards();
-        TableCards = (Card[])tableCards.toArray();
+        this.generateTableCards();
+
+        cardInterator = tableCards.iterator();
+        System.out.println("Table cards are as follows:");
+        while(cardInterator.hasNext()){
+            Card card = cardInterator.next();
+            System.out.println(card.getValue()+" of "+card.getSuit());
+        }
         this.informAllPlayersOfAnEvent("--------------------------------------------");
         this.informAllPlayersOfAnEvent("The three cards have been revealed on the table.");
-        this.informAllPlayersOfAnEvent("1. "+TableCards[0].getValueString()+" of "+TableCards[0].getSuit()+".");
-        this.informAllPlayersOfAnEvent("2. "+TableCards[1].getValueString()+" of "+TableCards[1].getSuit()+".");
-        this.informAllPlayersOfAnEvent("3. "+TableCards[2].getValueString()+" of "+TableCards[2].getSuit()+".");
+        this.informAllPlayersOfAnEvent("1. "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
+        this.informAllPlayersOfAnEvent("2. "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
+        this.informAllPlayersOfAnEvent("3. "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
         this.informAllPlayersOfAnEvent("--------------------------------------------");
         this.informAllPlayersOfAnEvent("Round #2 has started.......");
         this.Round();
         this.informAllPlayersOfAnEvent("Round #2 is over.");
         this.informAllPlayersOfAnEvent("--------------------------------------------");
         this.informAllPlayersOfAnEvent("The four cards have been revealed on the table.");
-        this.informAllPlayersOfAnEvent("1. "+TableCards[0].getValueString()+" of "+TableCards[0].getSuit()+".");
-        this.informAllPlayersOfAnEvent("2. "+TableCards[1].getValueString()+" of "+TableCards[1].getSuit()+".");
-        this.informAllPlayersOfAnEvent("3. "+TableCards[2].getValueString()+" of "+TableCards[2].getSuit()+".");
-        this.informAllPlayersOfAnEvent("4. "+TableCards[3].getValueString()+" of "+TableCards[3].getSuit()+".");
+        this.informAllPlayersOfAnEvent("1. "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
+        this.informAllPlayersOfAnEvent("2. "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
+        this.informAllPlayersOfAnEvent("3. "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
+        this.informAllPlayersOfAnEvent("4. "+tableCards.get(3).getValueString()+" of "+tableCards.get(3).getSuit()+".");
         this.informAllPlayersOfAnEvent("--------------------------------------------");
         this.informAllPlayersOfAnEvent("Round #3 has started.......");
         this.Round();
         this.informAllPlayersOfAnEvent("Round #3 is over.");
         this.informAllPlayersOfAnEvent("--------------------------------------------");
         this.informAllPlayersOfAnEvent("All cards have been revealed on the table.");
-        this.informAllPlayersOfAnEvent("1. "+TableCards[0].getValueString()+" of "+TableCards[0].getSuit()+".");
-        this.informAllPlayersOfAnEvent("2. "+TableCards[1].getValueString()+" of "+TableCards[1].getSuit()+".");
-        this.informAllPlayersOfAnEvent("3. "+TableCards[2].getValueString()+" of "+TableCards[2].getSuit()+".");
-        this.informAllPlayersOfAnEvent("4. "+TableCards[3].getValueString()+" of "+TableCards[3].getSuit()+".");
-        this.informAllPlayersOfAnEvent("4. "+TableCards[4].getValueString()+" of "+TableCards[4].getSuit()+".");
+        this.informAllPlayersOfAnEvent("1. "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
+        this.informAllPlayersOfAnEvent("2. "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
+        this.informAllPlayersOfAnEvent("3. "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
+        this.informAllPlayersOfAnEvent("4. "+tableCards.get(3).getValueString()+" of "+tableCards.get(3).getSuit()+".");
+        this.informAllPlayersOfAnEvent("5. "+tableCards.get(4).getValueString()+" of "+tableCards.get(4).getSuit()+".");
         this.informAllPlayersOfAnEvent("--------------------------------------------");
         this.informAllPlayersOfAnEvent("Round #4 has started.......");
         this.Round();
@@ -74,9 +85,8 @@ public class PokerHouse implements Runnable{
     public void calculateWinner(){
         Iterator<Player> playerIterator = players.iterator();
         while(playerIterator.hasNext()){
-            ArrayList<Card> temp;
-            temp = (ArrayList<Card>) tableCards;
             Player player = playerIterator.next();
+            List<Card> temp = tableCards;
             temp.addAll(Arrays.asList(player.getCards()));
             HandCalculator handCalculator = new HandCalculator(temp);
             player.setHandScore(handCalculator.getScore());
@@ -121,12 +131,12 @@ public class PokerHouse implements Runnable{
         while(playerIterator.hasNext()){
             Player player = playerIterator.next();
             ArrayList<Card> cards = new ArrayList<Card>(Arrays.asList(player.getCards()));
-            Iterator<Card> playerCardIterator = cards.iterator();
             player.writeToClient("There are "+players.size()+" in the game.");
             player.writeToClient("You are player: "+player.getID());
             player.writeToClient("You have in your bank: $"+player.getBank());
             player.writeToClient("Your cards are as follows:");
             int cardNumber = 1;
+            Iterator<Card> playerCardIterator = cards.iterator();
             while(playerCardIterator.hasNext()){
                 Card card = playerCardIterator.next();
                 player.writeToClient("Card #"+cardNumber+":"+card.getValueString()+" of "+card.getSuit());
@@ -154,6 +164,7 @@ public class PokerHouse implements Runnable{
             player.writeToClient("Before making your choice note that the amount you need to put in to stay in the game is $"+amountThatPlayersNeedToPutIn+", and the amount that you have put in is $"+player.getAmountPutIn()+".");
             player.writeToClient("(NOTE** if you type in an invalid response/inappropriate (i.e. typing cheque if you need to raise) then you will be kicked from the game!)");
             String choice = player.readFromClient();
+            System.out.print("Player "+player.getID()+" has chosen to "+choice);
             if(choice.equals("fold")){
                 this.informAllPlayersOfAnEvent("Player: "+player.getID()+" has folded.");
                 player.writeToClient("You have been disconnected.");
@@ -282,8 +293,8 @@ public class PokerHouse implements Runnable{
         return array;
     }
 
-    private void generateTableCardsCards(){
-        for(int i = 0; i<3 ; i++ ) {
+    private void generateTableCards(){
+        for(int i = 0; i<=4 ; i++ ) {
             try {
                 tableCards.add(new Card(generateCard()));
             } catch (Card.NoCardException e) {
@@ -303,14 +314,6 @@ public class PokerHouse implements Runnable{
             e.printStackTrace();
         }
         return card;
-    }
-
-    private void addCardToPool(){
-        try {
-            tableCards.add(new Card(generateCard()));
-        } catch (Card.NoCardException e) {
-            e.printStackTrace();
-        }
     }
 
     private boolean isUsed(int cardValue){
