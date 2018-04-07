@@ -19,6 +19,7 @@ public class PokerHouse implements Runnable{
     @Override
     public void run() {
         //wait until there are min of 2 players.
+        winners = new ArrayList<Player>();
         while(players.size() < 2){
            System.out.println("player size =" + players.size());
         }
