@@ -16,19 +16,29 @@ public class PokerHouse implements Runnable{
     private int raise = 0;
     private int winnings = 0;
     private List<Player> winners;
-    private int numberOfPlyaers = 0;
+    private int gameCounter = 1;
+    private Scanner scanner;
+    private int numOfPlayers;
+    private String numOfPlayersString;
     @Override
     public void run() {
         //wait until there are min of 2 players.
         winners = new ArrayList<Player>();
-        while(players.size() < 2){
-            System.out.println("player size =" + players.size());
+        System.out.println("Please type in how many players you want to join the game:");
+        System.out.println("(NOTE that this cannot be reset unless the program is restarted, additionally the game won't start unless correct amount of clients have joined the game!)");
+        scanner = new Scanner(System.in);
+        numOfPlayersString = scanner.nextLine();
+        System.out.println("restarted and that the game will not start until all players have joined.");
+        numOfPlayers = Integer.valueOf(numOfPlayersString);
+        while(players.size() < numOfPlayers){
+            System.out.println("Number of players that have connected: " + players.size());
         }
-        //Timer section
-
+        game();
+    }
+    public void game(){
         //Game start:
         //Tell everyone the game has started
-        informAllPlayersOfAnEvent("Game has started!!");
+        informAllPlayersOfAnEvent("Game #"+gameCounter+" has started!!");
         //Generate cards for all players
         generateCardsForAllPlayers();
         //To inform players of their cards
@@ -93,7 +103,31 @@ public class PokerHouse implements Runnable{
         Round();
         informAllPlayersOfAnEvent("Round #4 is over.");
         calculateWinner();
+        gameCounter++;
+        usedCards.clear();
+        tableCards.clear();
+        resetPool();
+        resetAmountPutIn();
+        setRaise(0);
+        winnings = 0;
+        winners = null;
+        Iterator<Player> playerIterator = players.iterator();
+        while(playerIterator.hasNext()) {
+            Player player = playerIterator.next();
+            player.resetCards();
+            player.setHandScore(0);
+            player.resetAmountPutIn();
+        }
+        game();
+
     }
+    public void resetPool(){
+        pool = 0;
+    }
+    public void resetAmountPutIn(){
+        amountThatPlayersNeedToPutIn = 0;
+    }
+
 
     public void calculateWinner(){
         Iterator<Player> playerIterator = players.iterator();
@@ -134,19 +168,7 @@ public class PokerHouse implements Runnable{
             winner.writeToClient("The pool was $"+getPool());
             winner.writeToClient("You have won the amount of $"+winnings+" and, you bank account is now $"+winner.getBank());
         }
-        informAllPlayersOfAnEvent("Game is over. You will now be disconnected.");
-        playerIterator = players.iterator();
-        while(playerIterator.hasNext()) {
-            Player player = playerIterator.next();
-
-            try {
-                player.getSocket().close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            playerIterator.remove();
-        }
-
+        informAllPlayersOfAnEvent("Game #"+gameCounter+ " is over.");
     }
 
 
@@ -191,7 +213,7 @@ public class PokerHouse implements Runnable{
                 break;
             }
             player.writeToClient("Your turn!");
-            player.writeToClient("Please indicate what you would like to do? (type 'fold', 'raise', 'call', or 'check')");
+            player.writeToClient("Please indicate what you would like to do? (type 'fold', 'raise', 'call', 'check', or 'disconnect')");
             player.writeToClient("Before making your choice note that the amount you need to put in to stay in the game is $"+getAmountThatPlayersNeedToPutIn()+", and the amount that you have put in is $"+player.getAmountPutIn()+".");
             player.writeToClient("(NOTE** if you type in an invalid response/inappropriate (i.e. typing cheque if you need to raise) then you will be kicked from the game!)");
             String choice = player.readFromClient();
@@ -262,6 +284,15 @@ public class PokerHouse implements Runnable{
             }
             else if(choice.equals("check") && (getAmountThatPlayersNeedToPutIn() == player.getAmountPutIn())){
                 informAllPlayersOfAnEvent("Player: "+player.getID()+" has checked.");
+            }else if(choice.equals("disconnect")){
+                informAllPlayersOfAnEvent("Player "+player.getID()+" has disconnected from the game.");
+                player.writeToClient("You have been disconnected.");
+                try {
+                    player.getSocket().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                playerIterator.remove();
             }
             else{
                 this.informAllPlayersOfAnEvent("Player: "+player.getID()+" been disconnected due to invalid response.");

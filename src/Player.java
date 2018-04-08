@@ -236,11 +236,17 @@ public class Player {
     public void setAmountPutIn(int amount){
         amountPutIn = amountPutIn + amount;
     }
-
+    public void resetAmountPutIn(){
+        amountPutIn = 0;
+    }
     public int getHandScore(){
         return handScore;
     }
     public void setHandScore(int score){
         handScore = score;
+    }
+    public void resetCards(){
+        cards[0]=null;
+        cards[1]=null;
     }
 }
