@@ -78,13 +78,13 @@ public final class Card {
         else if(value == 8)
             stringValue = "10";
         else if(value == 9)
-            stringValue = "jack";
+            stringValue = "Jack";
         else if(value == 10)
-            stringValue = "queen";
+            stringValue = "Queen";
         else if(value == 11)
-            stringValue = "king";
+            stringValue = "King";
         else
-            stringValue = "ace";
+            stringValue = "Ace";
 
         return stringValue;
     }

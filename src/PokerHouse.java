@@ -16,12 +16,13 @@ public class PokerHouse implements Runnable{
     private int raise = 0;
     private int winnings = 0;
     private List<Player> winners;
+    private int numberOfPlyaers = 0;
     @Override
     public void run() {
         //wait until there are min of 2 players.
         winners = new ArrayList<Player>();
         while(players.size() < 2){
-           System.out.println("player size =" + players.size());
+            System.out.println("player size =" + players.size());
         }
         //Timer section
 
