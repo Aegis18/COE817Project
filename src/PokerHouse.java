@@ -28,9 +28,9 @@ public class PokerHouse implements Runnable{
 
         //Game start:
         //Tell everyone the game has started
-        this.informAllPlayersOfAnEvent("Game has started!!");
+        informAllPlayersOfAnEvent("Game has started!!");
         //Generate cards for all players
-        this.generateCardsForAllPlayers();
+        generateCardsForAllPlayers();
         //To inform players of their cards
         System.out.println("Cards used by players are as follows:");
         Iterator<Card> cardInterator = usedCards.iterator();
@@ -38,13 +38,14 @@ public class PokerHouse implements Runnable{
             Card card = cardInterator.next();
             System.out.println(card.getValueString()+" of "+card.getSuit());
         }
-        this.initializePlayersWithGameInfo();
+        initializePlayersWithGameInfo();
         //Round #1
-        this.informAllPlayersOfAnEvent("Round #1 has started.......");
-        this.Round();
+        informAllPlayersOfAnEvent("Round #1 has started.......");
+        this.setRaise(0);
+        Round();
         //generate the table cards
-        this.informAllPlayersOfAnEvent("Round #1 is over.");
-        this.generateTableCards();
+        informAllPlayersOfAnEvent("Round #1 is over.");
+        generateTableCards();
 
         cardInterator = tableCards.iterator();
         System.out.println("Table cards are as follows:");
@@ -58,37 +59,40 @@ public class PokerHouse implements Runnable{
             Card card = cardInterator.next();
             System.out.println(card.getValueString()+" of "+card.getSuit());
         }
-        this.informAllPlayersOfAnEvent("--------------------------------------------");
-        this.informAllPlayersOfAnEvent("The three cards have been revealed on the table.");
-        this.informAllPlayersOfAnEvent("1. (NEW CARD) "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
-        this.informAllPlayersOfAnEvent("2. (NEW CARD) "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
-        this.informAllPlayersOfAnEvent("3. (NEW CARD) "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
-        this.informAllPlayersOfAnEvent("--------------------------------------------");
-        this.informAllPlayersOfAnEvent("Round #2 has started.......");
-        this.Round();
-        this.informAllPlayersOfAnEvent("Round #2 is over.");
-        this.informAllPlayersOfAnEvent("--------------------------------------------");
-        this.informAllPlayersOfAnEvent("The four cards have been revealed on the table.");
-        this.informAllPlayersOfAnEvent("1. "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
-        this.informAllPlayersOfAnEvent("2. "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
-        this.informAllPlayersOfAnEvent("3. "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
-        this.informAllPlayersOfAnEvent("4. (NEW CARD) "+tableCards.get(3).getValueString()+" of "+tableCards.get(3).getSuit()+".");
-        this.informAllPlayersOfAnEvent("--------------------------------------------");
-        this.informAllPlayersOfAnEvent("Round #3 has started.......");
-        this.Round();
-        this.informAllPlayersOfAnEvent("Round #3 is over.");
-        this.informAllPlayersOfAnEvent("--------------------------------------------");
-        this.informAllPlayersOfAnEvent("All cards have been revealed on the table.");
-        this.informAllPlayersOfAnEvent("1. "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
-        this.informAllPlayersOfAnEvent("2. "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
-        this.informAllPlayersOfAnEvent("3. "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
-        this.informAllPlayersOfAnEvent("4. "+tableCards.get(3).getValueString()+" of "+tableCards.get(3).getSuit()+".");
-        this.informAllPlayersOfAnEvent("5. (NEW CARD) "+tableCards.get(4).getValueString()+" of "+tableCards.get(4).getSuit()+".");
-        this.informAllPlayersOfAnEvent("--------------------------------------------");
-        this.informAllPlayersOfAnEvent("Round #4 has started.......");
-        this.Round();
-        this.informAllPlayersOfAnEvent("Round #4 is over.");
-        this.calculateWinner();
+        informAllPlayersOfAnEvent("--------------------------------------------");
+        informAllPlayersOfAnEvent("The three cards have been revealed on the table.");
+        informAllPlayersOfAnEvent("1. (NEW CARD) "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
+        informAllPlayersOfAnEvent("2. (NEW CARD) "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
+        informAllPlayersOfAnEvent("3. (NEW CARD) "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
+        informAllPlayersOfAnEvent("--------------------------------------------");
+        informAllPlayersOfAnEvent("Round #2 has started.......");
+        this.setRaise(0);
+        Round();
+        informAllPlayersOfAnEvent("Round #2 is over.");
+        informAllPlayersOfAnEvent("--------------------------------------------");
+        informAllPlayersOfAnEvent("The four cards have been revealed on the table.");
+        informAllPlayersOfAnEvent("1. "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
+        informAllPlayersOfAnEvent("2. "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
+        informAllPlayersOfAnEvent("3. "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
+        informAllPlayersOfAnEvent("4. (NEW CARD) "+tableCards.get(3).getValueString()+" of "+tableCards.get(3).getSuit()+".");
+        informAllPlayersOfAnEvent("--------------------------------------------");
+        informAllPlayersOfAnEvent("Round #3 has started.......");
+        this.setRaise(0);
+        Round();
+        informAllPlayersOfAnEvent("Round #3 is over.");
+        informAllPlayersOfAnEvent("--------------------------------------------");
+        informAllPlayersOfAnEvent("All cards have been revealed on the table.");
+        informAllPlayersOfAnEvent("1. "+tableCards.get(0).getValueString()+" of "+tableCards.get(0).getSuit()+".");
+        informAllPlayersOfAnEvent("2. "+tableCards.get(1).getValueString()+" of "+tableCards.get(1).getSuit()+".");
+        informAllPlayersOfAnEvent("3. "+tableCards.get(2).getValueString()+" of "+tableCards.get(2).getSuit()+".");
+        informAllPlayersOfAnEvent("4. "+tableCards.get(3).getValueString()+" of "+tableCards.get(3).getSuit()+".");
+        informAllPlayersOfAnEvent("5. (NEW CARD) "+tableCards.get(4).getValueString()+" of "+tableCards.get(4).getSuit()+".");
+        informAllPlayersOfAnEvent("--------------------------------------------");
+        informAllPlayersOfAnEvent("Round #4 has started.......");
+        this.setRaise(0);
+        Round();
+        informAllPlayersOfAnEvent("Round #4 is over.");
+        calculateWinner();
     }
 
     public void calculateWinner(){
@@ -121,16 +125,16 @@ public class PokerHouse implements Runnable{
         while(winnerIterator.hasNext()){
             Player winner = winnerIterator.next();
             if(winners.size()>1){
-                this.informAllPlayersOfAnEvent("There has been a "+winners.size()+" way tie");
+                informAllPlayersOfAnEvent("There has been a "+winners.size()+" way tie");
             }else {
                 winner.writeToClient("You are the winner, congratulations!!");
-                this.informAllPlayersOfAnEvent("The winner of the game was player "+winner.getID());
+                informAllPlayersOfAnEvent("The winner of the game was player "+winner.getID());
             }
             winner.setBank(1, winnings);
-            winner.writeToClient("The pool was $"+this.getPool());
+            winner.writeToClient("The pool was $"+getPool());
             winner.writeToClient("You have won the amount of $"+winnings+" and, you bank account is now $"+winner.getBank());
         }
-        this.informAllPlayersOfAnEvent("Game is over. You will now be disconnected.");
+        informAllPlayersOfAnEvent("Game is over. You will now be disconnected.");
         playerIterator = players.iterator();
         while(playerIterator.hasNext()) {
             Player player = playerIterator.next();
@@ -188,12 +192,12 @@ public class PokerHouse implements Runnable{
             }
             player.writeToClient("Your turn!");
             player.writeToClient("Please indicate what you would like to do? (type 'fold', 'raise', 'call', or 'check')");
-            player.writeToClient("Before making your choice note that the amount you need to put in to stay in the game is $"+amountThatPlayersNeedToPutIn+", and the amount that you have put in is $"+player.getAmountPutIn()+".");
+            player.writeToClient("Before making your choice note that the amount you need to put in to stay in the game is $"+getAmountThatPlayersNeedToPutIn()+", and the amount that you have put in is $"+player.getAmountPutIn()+".");
             player.writeToClient("(NOTE** if you type in an invalid response/inappropriate (i.e. typing cheque if you need to raise) then you will be kicked from the game!)");
             String choice = player.readFromClient();
             System.out.print("Player "+player.getID()+" has chosen to "+choice);
             if(choice.equals("fold")){
-                this.informAllPlayersOfAnEvent("Player: "+player.getID()+" has folded.");
+                informAllPlayersOfAnEvent("Player: "+player.getID()+" has folded.");
                 player.writeToClient("You have been disconnected.");
                 try {
                     player.getSocket().close();
@@ -204,18 +208,30 @@ public class PokerHouse implements Runnable{
             }else if(choice.equals("raise")){
                 player.writeToClient("You have $"+player.getBank()+" in your bank.");
                 player.writeToClient("Please type out the amount that you would like to bet: (NOTE** if you type in an invalid amount then you will be kicked from the game!)");
-                raise = Integer.valueOf(player.readFromClient());
-                player.setAmountPutIn(raise);
-                if(raise<=player.getBank()){
-                    amountThatPlayersNeedToPutIn = amountThatPlayersNeedToPutIn + raise;
-                    player.setBank(0, raise);
-                    this.setNewPool(raise);
-                    this.informAllPlayersOfAnEvent("Player "+player.getID()+" has raised by "+raise+", the pool is now: $"+getPool());
-                    player.writeToClient("Your bank now has $"+player.getBank());
-                    player.setAmountPutIn(raise);
-                    this.Round();
+                if(getRaise()<=player.getBank()){//when someone raises they first need to call the previous raise (that is the point of this first if statement.
+                    player.setAmountPutIn(getRaise());
+                    setNewPool(getRaise());
+                    player.setBank(0,getRaise());
                 }else{
-                    player.writeToClient("You have entered an invalid amount/response and have thus been disconnected.");
+                    player.writeToClient("You have raised more than you have in your bank and have thus been disconnected.");
+                    try {
+                        player.getSocket().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    playerIterator.remove();
+                }
+                setRaise(Integer.valueOf(player.readFromClient()));
+                if(getRaise()<=player.getBank()){
+                    player.setAmountPutIn(getRaise());
+                    setAmountThatPlayersNeedToPutIn(getRaise());
+                    player.setBank(0, getRaise());
+                    setNewPool(getRaise());
+                    informAllPlayersOfAnEvent("Player "+player.getID()+" has raised by "+getRaise()+", the pool is now: $"+getPool());
+                    player.writeToClient("Your bank now has $"+player.getBank());
+                    Round();
+                }else{
+                    player.writeToClient("You have raised more than you have in your bank and have thus been disconnected.");
                     try {
                         player.getSocket().close();
                     } catch (IOException e) {
@@ -226,16 +242,16 @@ public class PokerHouse implements Runnable{
                 }
             }
             else if(choice.equals("call")){
-                if((amountThatPlayersNeedToPutIn - player.getAmountPutIn()) <=player.getBank()){
-                    player.setAmountPutIn(amountThatPlayersNeedToPutIn - player.getAmountPutIn());
-                    this.setNewPool((amountThatPlayersNeedToPutIn - player.getAmountPutIn()));
-                    this.informAllPlayersOfAnEvent("Player "+player.getID()+" has called the raise of $"+raise+", and the new pool is $"+this.getPool()+".");
-                    player.setBank(0,(amountThatPlayersNeedToPutIn - player.getAmountPutIn()));
+                if(getRaise() <=player.getBank()){
+                    player.setAmountPutIn(getRaise());
+                    setNewPool(getRaise());
+                    informAllPlayersOfAnEvent("Player "+player.getID()+" has called the raise of $"+getRaise()+", and the new pool is $"+getPool()+".");
+                    player.setBank(0,getRaise());
                     player.writeToClient("Your bank now has $"+player.getBank());
                 }
                 else{
-                    this.informAllPlayersOfAnEvent("Player: "+player.getID()+" been disconnected due to invalid response.");
-                    player.writeToClient("You have entered an invalid response and have thus been disconnected.");
+                    informAllPlayersOfAnEvent("Player: "+player.getID()+" been disconnected due to invalid response.");
+                    player.writeToClient("The amount that you have called is more than you have in your bank and have thus been disconnected.");
                     try {
                         player.getSocket().close();
                     } catch (IOException e) {
@@ -244,8 +260,8 @@ public class PokerHouse implements Runnable{
                     playerIterator.remove();
                 }
             }
-            else if(choice.equals("check") && (amountThatPlayersNeedToPutIn == player.getAmountPutIn())){
-                this.informAllPlayersOfAnEvent("Player: "+player.getID()+" has checked.");
+            else if(choice.equals("check") && (getAmountThatPlayersNeedToPutIn() == player.getAmountPutIn())){
+                informAllPlayersOfAnEvent("Player: "+player.getID()+" has checked.");
             }
             else{
                 this.informAllPlayersOfAnEvent("Player: "+player.getID()+" been disconnected due to invalid response.");
@@ -258,37 +274,8 @@ public class PokerHouse implements Runnable{
                 playerIterator.remove();
             }
         }
-        amountThatPlayersNeedToPutIn  = 0;
-        raise = 0;
     }
 
-    public UUID getGameID() {
-        return gameID;
-    }
-
-    public int getRound() {
-        return round;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public List<Card> getUsedCards() {
-        return usedCards;
-    }
-
-    public List<Card> getTableCards() {
-        return tableCards;
-    }
-
-    public int getPlayerID() {
-        return playerID;
-    }
 
     private PokerHouse(){
         players = new ArrayList<Player>();
@@ -415,4 +402,20 @@ public class PokerHouse implements Runnable{
     public void setNewPool(int raise){
         pool = pool+raise;
     }
+    public int getAmountThatPlayersNeedToPutIn(){
+        return amountThatPlayersNeedToPutIn;
+    }
+    public void setAmountThatPlayersNeedToPutIn(int raise){
+        amountThatPlayersNeedToPutIn =  amountThatPlayersNeedToPutIn +raise;
+    }
+
+    public int getRaise(){
+        return raise;
+    }
+    public void setRaise(int raise){
+        this.raise = raise;
+    }
 }
+
+
+
