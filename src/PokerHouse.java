@@ -221,11 +221,6 @@ public class PokerHouse implements Runnable{
             if(choice.equals("fold")){
                 informAllPlayersOfAnEvent("Player: "+player.getID()+" has folded.");
                 player.writeToClient("You have been disconnected.");
-                try {
-                    player.getSocket().close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 playerIterator.remove();
             }else if(choice.equals("raise")){
                 player.writeToClient("You have $"+player.getBank()+" in your bank.");
